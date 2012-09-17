@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Roll test</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+    <!--<script src="http:////cdnjs.cloudflare.com/ajax/libs/zepto/1.0rc1/zepto.min.js"></script>-->
+    <script src="../rolling.js"></script>
+</head>
+<body>
+<script>
+$(function(){
+    $('a.to').on('click', function(){
+        $(window).rollTo(this.hash.substr(1));
+    });
+
+    $('a.on').on('click', function(){
+        var w = $(window);
+        w.rollTo(0);
+    });
+
+    $(window).on('throttledroll', function(){
+        console.log($(this).scrollTop());
+    })
+
+});
+</script>
+
+<header>
+    <a href="#footer" class="to">Footer</a>
+</header>
+
+<div id="content">
+    <a href="#header" class="to">Header</a>
+</div>
+
+<footer>
+    <a href="##content" class="to">Content</a><br>
+    <a href="#" class="on">Roll to 0</a>
+</footer>
+
+</body>
+</html>
