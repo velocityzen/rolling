@@ -15,8 +15,7 @@ $(function(){
     });
 
     $('a.on').on('click', function(){
-        var w = $(window);
-        w.rollTo(0);
+        $(window).rollTo(0, function() {alert('done');});
     });
 
     $(window).on('throttledroll', function(){

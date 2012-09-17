@@ -63,9 +63,14 @@
                 rollTo,
                 $elem;
 
+            if(typeof options === 'function' && callback === undefined) {
+                callback = options;
+                options = {}
+            }
+
             options = $.extend(options, {
                 shift: 0,
-                delay: 1000,
+                duration: 1000,
                 ease: 'linear'
             });
 
@@ -84,13 +89,13 @@
             }
 
             if(self === window) {
-                $elem = $('html,body');
+                $elem = $('body');
             } else {
                 $elem = $(self);
             }
 
             $elem.stop()
-                .animate({scrollTop: rollTo}, options.delay, options.ease, function(){
+                .animate({scrollTop: rollTo}, options.duration, options.ease, function(){
                     if(typeof callback === 'function') {
                         callback();
                     }
