@@ -5,7 +5,7 @@ Several jQuery extensions for scrolling window
 
 ## rollTo()
 
-__Rolling alway interupt when user start to scroll__
+__Rolling always interupt when user start to scroll__
 
     $(window).rollTo(roll, options, callback);
 
