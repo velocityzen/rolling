@@ -70,14 +70,14 @@
             });
 
             //selector
-            if(typeof roll == 'string') {
+            if(typeof roll === 'string') {
                 $elem = $(roll);
                 if(!$elem) {
                     return this; // didn't do anything and didn't brake chain
                 }
                 rollTo = $elem.position().top + options.shift;
 
-            } else if(typeof roll == 'number') {  //value
+            } else if(typeof roll === 'number') {  //value
                 rollTo = roll;
             } else {
                 rollTo = $(this).position().top + options.shift;
