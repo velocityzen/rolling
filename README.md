@@ -7,15 +7,17 @@ Several jQuery extensions for scrolling window
 
 __Rolling always interupt when user start to scroll__
 
-    $(window).rollTo(roll, options, callback);
+```js
+$(window).rollTo(roll, options, callback);
 
-    __roll__            //selector or number
-    options = {
-        shift: 0,       //shift of original position, can be negative
-        duration: 1000, //animation duration
-        ease: 'linear'  //easing function
-    }
-    callback            //callback function
+roll,               //selector or number
+options = {
+    shift: 0,       //shift of original position, can be negative
+    duration: 1000, //animation duration
+    ease: 'linear'  //easing function
+},
+callback            //callback function
+```
 
 ### Usage
 
