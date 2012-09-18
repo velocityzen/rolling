@@ -89,7 +89,7 @@
             }
 
             if(self === window) {
-                $elem = $('body');
+                $elem = $.browser.mozilla ? $('html') : $('body');
             } else {
                 $elem = $(self);
             }
