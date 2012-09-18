@@ -1,6 +1,7 @@
 ;(function($, window, document, undefined) {
 
-    var $e = $.event;
+    var $e = $.event,
+        $es = $e.special;
 
 //throttled roll
     var rollTimeout;
@@ -9,12 +10,12 @@
         return fn ? this.on( "throttledroll", fn ) : this.trigger( "throttledroll", ["execAsap"] );
     };
 
-    $e.special.throttledroll = {
+    $es.throttledroll = {
         setup: function() {
-            $e.add(this, "scroll", $e.special.throttledroll.handler, {} );
+            $e.add(this, "scroll", $es.throttledroll.handler, {} );
         },
         teardown: function() {
-            $e.remove(this, "scroll", $e.special.throttledroll.handler );
+            $e.remove(this, "scroll", $es.throttledroll.handler );
         },
         handler: function( event, execAsap ) {
             var self = this,
@@ -41,7 +42,7 @@
         return this[ fn ? "on" : "trigger" ]( "userroll", fn );
     };
 
-    $e.special.userroll = {
+    $es.userroll = {
         setup: function(){
             $e.add( this, wheelEvents, wheelHandler, {} );
         },
