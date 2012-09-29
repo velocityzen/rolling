@@ -61,19 +61,24 @@
     $.fn.extend({
         rollTo: function(roll, options, callback){
             var self = this[0],
+                direction,
                 rollTo,
+                scroll,
                 $elem;
 
             if(typeof options === 'function' && callback === undefined) {
                 callback = options;
-                options = {}
+                options = {};
             }
 
             options = $.extend(options, {
+                direction: 'vertical',
                 shift: 0,
                 duration: 1000,
                 ease: 'linear'
             });
+
+            direction = (options.direction === 'vertical');
 
             //selector
             if(typeof roll === 'string') {
@@ -81,12 +86,12 @@
                 if(!$elem) {
                     return this; // didn't do anything and didn't brake chain
                 }
-                rollTo = $elem.position().top + options.shift;
+                rollTo = direction ? $elem.position().top : $elem.position().left + options.shift;
 
             } else if(typeof roll === 'number') {  //value
                 rollTo = roll;
             } else {
-                rollTo = $(this).position().top + options.shift;
+                rollTo = direction ? $(this).position().top : $(this).position().left + options.shift;
             }
 
             if(self === window) {
@@ -95,8 +100,10 @@
                 $elem = $(self);
             }
 
+            scroll = direction ? {scrollTop: rollTo} : {scrollLeft: rollTo};
+
             $elem.stop()
-                .animate({scrollTop: rollTo}, options.duration, options.ease, function(){
+                .animate(scroll, options.duration, options.ease, function(){
                     if(typeof callback === 'function') {
                         callback();
                     }

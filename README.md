@@ -10,13 +10,14 @@ __Rolling is always interupted when user starts to scroll__
 ```js
 $(window).rollTo(roll, options, callback);
 
-roll,               //selector or number
+roll,                       //selector or number
 options = {
-    shift: 0,       //shift of original position, can be negative
-    duration: 1000, //animation duration
-    ease: 'linear'  //easing function
+    direction: 'vertical',  //scrolling direction vertical or horizontal
+    shift: 0,               //shift of original position, can be negative
+    duration: 1000,         //animation duration
+    ease: 'linear'          //easing function
 },
-callback            //callback function
+callback                    //callback function
 ```
 
 ### Usage
