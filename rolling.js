@@ -86,12 +86,12 @@
                 if(!$elem) {
                     return this; // didn't do anything and didn't brake chain
                 }
-                rollTo = direction ? $elem.position().top : $elem.position().left + options.shift;
+                rollTo = (direction ? $elem.position().top : $elem.position().left) + options.shift;
 
             } else if(typeof roll === 'number') {  //value
                 rollTo = roll;
             } else {
-                rollTo = direction ? $(this).position().top : $(this).position().left + options.shift;
+                rollTo = (direction ? $(this).position().top : $(this).position().left) + options.shift;
             }
 
             if(self === window) {
