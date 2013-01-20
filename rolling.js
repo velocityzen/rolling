@@ -1,7 +1,13 @@
+/*jshint
+    strict: false,
+    browser:true,
+    jquery: true
+*/
 ;(function($, window, document, undefined) {
 
     var $e = $.event,
-        $es = $e.special;
+        $es = $e.special,
+        isMozilla = !!navigator.userAgent.match(/firefox/i);
 
 //throttled roll
     var rollTimeout;
@@ -33,10 +39,9 @@
         }
     };
 
-
-// userroll event for interrupting scrolling
-    var wheelEvents = !$.browser.mozilla ? "mousewheel" : // IE, opera, safari
-        "DOMMouseScroll"+( $.browser.version<"1.9" ? " mousemove" : "" ); // firefox
+    // userroll event for interrupting scrolling
+    var wheelEvents =  !isMozilla ? "mousewheel" : // IE, opera, safari
+                                           "DOMMouseScroll"; // firefox
 
     $.fn.userroll = function( fn ){
         return this[ fn ? "on" : "trigger" ]( "userroll", fn );
@@ -95,7 +100,7 @@
             }
 
             if(self === window) {
-                $elem = $.browser.mozilla ? $('html') : $('body');
+                $elem = isMozilla ? $('html') : $('body');
             } else {
                 $elem = $(self);
             }
