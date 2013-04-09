@@ -30,6 +30,7 @@ $(window).rollTo(10);
 $(window).rollTo('nav');
 $(window).rollTo('.navigation');
 $(window).rollTo('#navigation');
+$(window).rollTo($('#navigation'));
 
 // scroll window to footer and call function when ended.
 $(window).rollTo('footer', function() {alert('done');});
@@ -39,9 +40,10 @@ $('div.scroll-area').rollTo(30, { shift: -20 }, function() {alert('done');});
 
 ```
 
-## userroll and throttledroll events
+## userstartroll, userstoproll and throttledroll events
 
-__userroll__ — fires when user start scrolling.
+__userstartroll__ — fires when user start scrolling.
+__userstoproll__  — fires when user stoped scrolling.
 __throttledroll__ — like usual scroll event but fires rarely
 
 You can use it like any jQuery event.
