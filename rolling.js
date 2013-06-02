@@ -96,12 +96,12 @@
                 options = {};
             }
 
-            options = $.extend(options, {
+            options = $.extend({
                 direction: 'vertical',
                 shift: 0,
                 duration: 1000,
                 ease: 'linear'
-            });
+            }, options);
 
             direction = (options.direction === 'vertical');
 
@@ -111,10 +111,12 @@
                 if(!$elem) {
                     return this; // didn't do anything and didn't brake chain
                 }
-                rollTo = (direction ? $elem.position().top : $elem.position().left) + options.shift;
+
+                rollTo = self === window ? $elem.offset() : $elem.position();
+                rollTo = (direction ? rollTo.top : rollTo.left) + options.shift;
 
             } else if(typeOf === 'number') {  //value
-                rollTo = roll;
+                rollTo = roll + options.shift;
             } else {
                 rollTo = (direction ? $(this).position().top : $(this).position().left) + options.shift;
             }
