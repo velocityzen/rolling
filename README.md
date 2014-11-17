@@ -1,6 +1,6 @@
 # Rolling
 
-Scroll everithing with no dependencies
+Scroll everything with no dependencies
 
 ## rollTo(el, options, [cb])
 __Rolling is always interrupted when user starts to scroll__
@@ -13,7 +13,7 @@ __Rolling is always interrupted when user starts to scroll__
 	-   **shiftLeft** — shift of original position, can be negative, default 0
 	-	**duration** — animation duration, default 1000ms
 	-	**ease** — easing function, default "linear"
-*   callback — callback function, optional
+*   **callback** — callback function, optional
 
 ### Easing functions
 *   inQuad
