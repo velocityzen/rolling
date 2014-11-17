@@ -1,49 +1,64 @@
-
 # Rolling
 
-Several jQuery extensions for scrolling window
+Scroll everithing with no dependencies
 
-## rollTo()
+## rollTo(el, options, [cb])
+__Rolling is always interrupted when user starts to scroll__
 
-__Rolling is always interupted when user starts to scroll__
+*   **el** — element to scroll
+*   **options**
+	-	**to** — html element or selector or `{top: 10, left: 30}`
+    -	**direction** — 'vertical || horizontal || both', default "vertical"
+	-   **shiftTop** — shift of original position, can be negative, default 0
+	-   **shiftLeft** — shift of original position, can be negative, default 0
+	-	**duration** — animation duration, default 1000ms
+	-	**ease** — easing function, default "linear"
+*   callback — callback function, optional
 
-```js
-$(window).rollTo(roll, options, callback);
+### Easing functions
+*   inQuad
+*   outQuad
+*   inOutQuad
+*   inCubic
+*   outCubic
+*   inOutCubic
+*   inQuart
+*   outQuart
+*   inOutQuart
+*   inQuint
+*   outQuint
+*   inOutQuint
+*   inSine
+*   outSine
+*   inOutSine
+*   inExpo
+*   outExpo
+*   inOutExpo
+*   inCirc
+*   outCirc
+*   inOutCirc
+*   inElastic
+*   outElastic
+*   inOutElastic
+*   inBack
+*   outBack
+*   inOutBack
 
-roll,                       //selector or number
-options = {
-    direction: 'vertical',  //scrolling direction vertical or horizontal
-    shift: 0,               //shift of original position, can be negative
-    duration: 1000,         //animation duration
-    ease: 'linear'          //easing function
-},
-callback                    //callback function
-```
-
+## jQuery version
 ### Usage
-
 ```js
 // scroll window to position 10
-$(window).rollTo(10);
+$(window).rollTo({top:10});
 
 // scroll window to navigation
-$(window).rollTo('nav');
-$(window).rollTo('.navigation');
-$(window).rollTo('#navigation');
-$(window).rollTo($('#navigation'));
-
-// scroll window to footer and call function when ended.
-$(window).rollTo('footer', function() {alert('done');});
-
-// scroll div to position 10px from top and call function when ended.
-$('div.scroll-area').rollTo(30, { shift: -20 }, function() {alert('done');});
-
+$(window).rollTo({to: 'nav'});
+$(window).rollTo({to: '.navigation'});
+$(window).rollTo({to: '#navigation'});
+$(window).rollTo({to: $('#navigation')});
 ```
 
-## userstartroll, userstoproll and throttledroll events
+## Browser support
+Safari, Firefox, IE9+, Chrome, Mobile Safari.
 
-__userstartroll__ — fires when user start scrolling.
-__userstoproll__  — fires when user stoped scrolling.
-__throttledroll__ — like usual scroll event but fires rarely
 
-You can use it like any jQuery event.
+License: MIT;

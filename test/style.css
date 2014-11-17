@@ -6,3 +6,8 @@ header, #content, footer {
 header{background-color: #bbb;}
 #content{background-color: #999;}
 footer{background-color: #666;}
+#scroll{
+	height: 100px;
+	background-color: #fff;
+	overflow: scroll;
+}

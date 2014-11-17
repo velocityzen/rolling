@@ -3,24 +3,37 @@
 <head>
     <title>Roll test</title>
     <link rel="stylesheet" href="style.css">
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="../rolling.js"></script>
 </head>
 <body>
 <script>
 $(function(){
-    $('a.to').on('click', function(){
-        $(window).rollTo(this.hash.substr(1));
+    $('a.to').on('click', function(e){
+        e.preventDefault();
+        rollTo(window, {to: this.hash.substr(1)});
     });
 
-    $('a.on').on('click', function(){
-        $(window).rollTo(0, function() {alert('done');});
+    $('a.on').on('click', function(e){
+        e.preventDefault();
+        rollTo(window, {
+                to: {top: 100},
+                ease: "inOutExpo"
+            },
+            function() {console.log('done');}
+        );
     });
 
-    $(window).on('throttledroll', function(){
-        console.log($(this).scrollTop());
-    })
-
+    var child = document.getElementById("scroll");
+    $('a.child').on('click', function(){
+        rollTo(child, {
+                to: {top: 200},
+                shiftTop: 50,
+                ease: "inOutExpo"
+            },
+            function() {console.log('done');}
+        );
+    });
 });
 </script>
 
@@ -30,6 +43,10 @@ $(function(){
 
 <div id="content">
     <a href="#header" class="to">Header</a>
+    <a href="#child" class="child">Child</a>
+    <div id="scroll">
+        <p>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14</p>
+    </div>
 </div>
 
 <footer>
