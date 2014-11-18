@@ -3,7 +3,7 @@
     browser:true
 */
 
-var Roll = require('roll'),
+var roll = require('roll'),
 	isWebkit = !!navigator.userAgent.match(/webkit/i);
 
 var rollTo = function(el, options, cb) {
@@ -45,7 +45,7 @@ var rollTo = function(el, options, cb) {
 		target.scrollLeft = to.left + shiftLeft;
 	}
 
-	return new Roll(el, target, duration, ease, cb);
+	return roll(el, target, duration, ease, cb);
 };
 
 exports("rollTo", rollTo, true);

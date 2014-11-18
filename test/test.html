@@ -9,25 +9,21 @@
 <body>
 <script>
 $(function(){
-    $('a.to').on('click', function(e){
-        e.preventDefault();
-        rollTo(window, {to: this.hash.substr(1)});
-    });
-
-    $('a.on').on('click', function(e){
+    $('header a').on('click', function(e){
         e.preventDefault();
         rollTo(window, {
-                to: {top: 100},
-                ease: "inOutExpo"
-            },
-            function() {console.log('done');}
-        );
+            to: this.hash,
+            ease: "inOutExpo",
+            duration: 1500
+        });
     });
 
     var child = document.getElementById("scroll");
-    $('a.child').on('click', function(){
+    $('a.child').on('click', function(e){
+        e.preventDefault();
         rollTo(child, {
-                to: {top: 200},
+                to: {top: 200, left: 50},
+                direction: "both",
                 shiftTop: 50,
                 ease: "inOutExpo"
             },
@@ -38,20 +34,23 @@ $(function(){
 </script>
 
 <header>
-    <a href="#footer" class="to">Footer</a>
+    <ul>
+        <li><a href="#header">Header</a></li>
+        <li><a href="#content">Content</a></li>
+        <li><a href="#footer">Footer</a></li>
+    </ul>
 </header>
 
+<div id="header"><p>header</p></div>
 <div id="content">
-    <a href="#header" class="to">Header</a>
-    <a href="#child" class="child">Child</a>
+    <p>content</p>
+    <p><a href="#child" class="child">Child</a></p>
     <div id="scroll">
         <p>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14</p>
     </div>
 </div>
-
-<footer>
-    <a href="##content" class="to">Content</a><br>
-    <a href="#" class="on">Roll to 0</a>
+<footer id="footer">
+    <p>footer</p>
 </footer>
 
 </body>

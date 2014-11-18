@@ -5,12 +5,13 @@
 
 var requestAnimationFrame = require('requestAnimationFrame'),
 	easing = require('easing'),
-	isMozilla = !!navigator.userAgent.match(/firefox/i),
     userScrollEvent = "onwheel" in document.createElement("div") ? "wheel" : // Modern browsers support "wheel"
               document.onmousewheel !== undefined ? "mousewheel" : // Webkit and IE support at least "mousewheel"
               "DOMMouseScroll", // let's assume that remaining browsers are older Firefox
 
 	isRolling = true,
+	queueIndex = 0,
+	queueLength = 0,
 	queue = [];
 
 var engine = function() {
@@ -61,15 +62,20 @@ var Roll = function(el, rolls, duration, ease, cb) {
 };
 
 Roll.prototype.start = function() {
-	this.index = queue.push(this) - 1;
+	this.id = queueIndex++;
+	this.el.setAttribute("data-rolling", this.id);
+	queue[this.id] = this;
 	isRolling = true;
-	queue.length && engine();
+	!queueLength && engine();
+	queueLength++;
 };
 
 Roll.prototype.stop = function() {
 	this.el.removeEventListener(userScrollEvent, this.scrollHandler);
-	queue.splice(this.index, 1);
-	if(!queue.length) {
+	this.el.removeAttribute("data-rolling");
+	delete queue[this.id];
+	queueLength--;
+	if(!queueLength) {
 		isRolling = false;
 	}
 };
@@ -77,9 +83,15 @@ Roll.prototype.stop = function() {
 Roll.prototype.done = function() {
 	var self = this;
 	setTimeout(function () {
-		self.cb.call(self.el);
+		self.cb(self.el);
 	}, 0);
 };
 
+var handler = function(el, rolls, duration, ease, cb) {
+	 var id = el.getAttribute("data-rolling");
+	 id && queue[id].stop();
 
-exports("roll", Roll);
+	 return new Roll(el, rolls, duration, ease, cb);
+};
+
+exports("roll", handler);
