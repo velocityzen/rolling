@@ -8,6 +8,11 @@
 </head>
 <body>
 <script>
+/*jshint
+    strict: false,
+    browser:true,
+    jquery: true
+*/
 $(function(){
     $('header a').on('click', function(e){
         e.preventDefault();
@@ -18,10 +23,10 @@ $(function(){
         });
     });
 
-    var child = document.getElementById("scroll");
+    var scroll = document.getElementById("scroll");
     $('a.child').on('click', function(e){
         e.preventDefault();
-        rollTo(child, {
+        rollTo(scroll, {
                 to: {top: 200, left: 50},
                 direction: "both",
                 shiftTop: 50,
@@ -30,6 +35,17 @@ $(function(){
             function() {console.log('done');}
         );
     });
+
+    rollOn(window, {
+            on: "#content",
+            condition: "top(10) and bottom(-10)"
+        },
+        function(condition, el) {
+            el.style.background = condition ? "#00ff00" : "#ff0000";
+        }
+    );
+
+
 });
 </script>
 
@@ -46,7 +62,7 @@ $(function(){
     <p>content</p>
     <p><a href="#child" class="child">Child</a></p>
     <div id="scroll">
-        <p>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14</p>
+    <p>1<br>2<br>3<br>4<br>5<br>6<span id="rollon">7</span>8<br>9<br>10<br>11<br>12<br>13<br>14</p>
     </div>
 </div>
 <footer id="footer">

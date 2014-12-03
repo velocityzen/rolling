@@ -9,15 +9,17 @@ var js = {
 	"rolling.js": [
 		"raf.js",
 		"easing.js",
-		"roll.js",
+		"engine.js",
 		"rollto.js",
+		"rollon.js",
 	],
 
 	"jquery.rolling.js": [
 		"raf.js",
 		"easing.js",
-		"roll.js",
+		"engine.js",
 		"rollto.js",
+		"rollon.js",
 		"jquery.js",
 	]
 };

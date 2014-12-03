@@ -3,7 +3,7 @@
     browser:true
 */
 
-var roll = require('roll'),
+var engineRollTo = require('engine').rollto,
 	isWebkit = !!navigator.userAgent.match(/webkit/i);
 
 var rollTo = function(el, options, cb) {
@@ -13,11 +13,7 @@ var rollTo = function(el, options, cb) {
 
     var target = {},
     	to = options.to,
-    	direction = options.direction || "vertical",
-    	shiftTop = options.shiftTop || 0,
-    	shiftLeft = options.shiftLeft || 0,
-    	duration = options.duration || 1000,
-    	ease = options.ease || "linear";
+    	direction = options.direction || "vertical";
 
     if(typeof to === "string") {
     	to = el.querySelector(to);
@@ -38,14 +34,27 @@ var rollTo = function(el, options, cb) {
 	}
 
 	if(direction === "vertical" || direction ==="both") {
-		target.scrollTop = to.top + shiftTop;
+		var topChange = to.top + (options.shiftTop || 0);
+		if(topChange !== 0) {
+			target.scrollTop = topChange;
+		}
 	}
 
 	if(direction === "horizontal" || direction ==="both") {
-		target.scrollLeft = to.left + shiftLeft;
+		var leftChange = to.left + (options.shiftLeft || 0);
+		if(leftChange !== 0) {
+			target.scrollLeft = leftChange;
+		}
 	}
 
-	return roll(el, target, duration, ease, cb);
+	if(Object.keys(target).length) {
+		return engineRollTo(el, {
+			a: target,
+			duration: options.duration || 1000,
+			ease: options.ease || "linear",
+			cb: cb
+		});
+	}
 };
 
 exports("rollTo", rollTo, true);

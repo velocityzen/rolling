@@ -4,7 +4,8 @@
     jquery: true
 */
 
-var rollTo = require('rollto');
+var rollTo = require('rollto'),
+	rollOn = require('rollon');
 
 jQuery.fn.extend({
 	rollTo: function(el, options, cb) {
