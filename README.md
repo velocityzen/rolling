@@ -2,11 +2,11 @@
 
 Scroll everything with no dependencies
 
-**All calculations are super optimzed for smooth scrolling**
+**All calculations are super optimized for smooth scrolling**
 
 ## rollTo(el, options, [cb])
 Scrolls element for your pleasure.
-__Rolling is always interrupted when user starts to scroll__
+__Rolling is always interrupted when a user starts to scroll__
 
 *   **el** — element to scroll
 *   **options**
@@ -34,13 +34,13 @@ rollTo(window, {
 ```
 
 ## rollOn(el, options, cb)
-Calls callback function on scroll element conditions.
+Calls the callback function if the conditions result is changed.
 
 *   **el** — element to scroll
 *   **options**
     -   **on** — html element or selector or `{top: number, left: number}`
-    -   **condition** conditions for html element position relative to scroll position of the el
-*   **callback** — callback function, gets bool value about condition changes
+    -   **condition** conditions for an html element position relative to the scroll position of the el
+*   **callback** — callback function, gets boolean value on condition changes and an html element that triggered the change
 
 ### Conditions
 Example: `'top(20) and bottom(-20)'`
