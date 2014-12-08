@@ -21,4 +21,4 @@ if (!requestAnimationFrame) {
     };
 }
 
-exports("requestAnimationFrame", requestAnimationFrame);
+exports("detective/raf", requestAnimationFrame);

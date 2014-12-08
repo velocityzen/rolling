@@ -4,8 +4,8 @@
     jquery: true
 */
 
-var rollTo = require('rollto'),
-	rollOn = require('rollon');
+var rollTo = require('rolling/rollto'),
+	rollOn = require('rolling/rollon');
 
 jQuery.fn.extend({
 	rollTo: function(el, options, cb) {
@@ -13,6 +13,14 @@ jQuery.fn.extend({
 			el = el[0];
 		}
 		rollTo(this[0], el, options, cb);
+		return this;
+	},
+
+	rollOn: function(el, options, cb) {
+		if(el instanceof jQuery) {
+			el = el[0];
+		}
+		rollOn(this[0], el, options, cb);
 		return this;
 	}
 });

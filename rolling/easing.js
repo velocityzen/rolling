@@ -2,7 +2,7 @@
     strict: false
 */
 
-exports("easing", {
+exports("rolling/easing", {
 	linear: function (t, b, c, d) {
 		return c*t/d + b;
 	},

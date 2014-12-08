@@ -3,8 +3,8 @@
     browser:true
 */
 
-var requestAnimationFrame = require('requestAnimationFrame'),
-	easing = require('easing'),
+var requestAnimationFrame = require('detective/raf'),
+	easing = require('rolling/easing'),
     userScrollEvent = "onwheel" in document.createElement("div") ? "wheel" : // Modern browsers support "wheel"
               document.onmousewheel !== undefined ? "mousewheel" : // Webkit and IE support at least "mousewheel"
               "DOMMouseScroll", // let's assume that remaining browsers are older Firefox
@@ -14,19 +14,43 @@ var requestAnimationFrame = require('requestAnimationFrame'),
 	queue = [],
 	docEl = document.documentElement;
 
+//handling window resize
+var windowResized = true,
+	wHeight,
+	wHalfHeight,
+	wWidth,
+	wHalfWidth,
+
+	onWindowResize = function() {
+		windowResized = true;
+	};
+
+window.addEventListener("resize", onWindowResize, false);
+
+//calc engine
 var engine = function() {
+	if(windowResized) {
+		wHeight = Math.max(docEl.clientHeight, window.innerHeight || 0);
+		wWidth = Math.max(docEl.clientWidth, window.innerWidth || 0);
+		wHalfHeight = wHeight / 2;
+		wHalfWidth = wWidth / 2;
+		windowResized = false;
+	}
+
 	for (var i in queue) {
 		var self = queue[i];
 		self.a && self.animations();
-		self.c && self.scrollChanged && self.conditions();
+		self.c && self.updated && self.conditions();
 	}
 
 	queueLength && requestAnimationFrame(engine);
 };
 
+//animation frame class
 var RollFrame = function(el, options) {
 	var self = this;
 	self.el = el;
+	self.isWindow = (el === document.body || el === docEl);
 
 	if(options.a) {
 		self.type = "rollto";
@@ -51,10 +75,10 @@ var RollFrame = function(el, options) {
 		self.begin = Date.now();
 	} else if(options.c) {
 		self.onScroll = function(e) {
-			self.scrollChanged = true;
+			self.updated = true;
 		};
 
-		if(el === document.body || el === docEl) {
+		if(self.isWindow) {
 			window.addEventListener("scroll", self.onScroll, false);
 		} else {
 			el.addEventListener("scroll", self.onScroll, false);
@@ -62,7 +86,6 @@ var RollFrame = function(el, options) {
 
 		window.addEventListener("resize", self.onScroll, false);
 
-		self.scrollChanged = true;
 		self.type = "rollon";
 		self.c = [];
 		self.add(options);
@@ -73,14 +96,14 @@ var RollFrame = function(el, options) {
 RollFrame.prototype = {
 	add: function(conditions) {
 		this.c.push(conditions);
+		this.update();
 	},
 
 	start: function() {
 		this.id = queueIndex++;
 		this.el.setAttribute("data-"+this.type, this.id);
 		queue[this.id] = this;
-		queueLength++;
-		queueLength === 1 && engine();
+		++queueLength === 1 && engine();
 	},
 
 	stop: function() {
@@ -114,79 +137,101 @@ RollFrame.prototype = {
 		}
 	},
 
+	update: function() {
+		var conditions = this.c;
+		for (var i in conditions) {
+			var c = conditions[i];
+			if(c.selector) {
+				c.on = this.el.querySelectorAll(c.selector);
+			}
+		}
+		this.updated = true;
+	},
+
 	conditions: function() {
 		var self = this,
+			el = self.el,
 			conditionsArray = self.c,
-		 	top, left, bottom, right,
-		 	newValue;
+		 	top, left, bottom, right, middle, center,
+		 	posEl = el.getBoundingClientRect();
 
 		for (var i in conditionsArray) {
 			var conditionsItem = conditionsArray[i],
 				conditions = conditionsItem.c,
-				posTarget = conditionsItem.on.getBoundingClientRect();
+				targets = conditionsItem.on;
 
-			if(self.el === document.body || self.el === docEl) {
-				top = posTarget.top;
-				left = posTarget.left;
-				bottom = posTarget.bottom - Math.max(docEl.clientHeight, window.innerHeight || 0);
-				right = posTarget.right - Math.max(docEl.clientWidth, window.innerWidth || 0);
-			 } else {
-			 	var posEl = self.el.getBoundingClientRect();
+			for(var t = 0, l = targets.length; t<l; t++ ) {
+				var target = targets[t],
+					posTarget = target.getBoundingClientRect(),
+					newValue;
 
-		 		top = posTarget.top - posEl.top;
-				left = posTarget.left - posEl.left;
-				bottom = posTarget.bottom - posEl.bottom;
-				right = posTarget.right - posEl.right;
-			 }
+				if(el === target) {
+					top = el.scrollTop;
+					left = el.scrollLeft;
 
-			for(var c in conditions) {
-				var conds = conditions[c];
-				newValue = true;
+					if(self.isWindow) {
+						bottom = top + wHeight;
+						right = left + wWidth;
+					} else {
+						bottom = top + el.offsetHeight;
+						right = left + el.offsetWidth;
+					}
+				} else if(self.isWindow) {
+					top = posTarget.top;
+					left = posTarget.left;
+					bottom = posTarget.bottom - wHeight;
+					right = posTarget.right - wWidth;
+				 } else {
+			 		top = posTarget.top - posEl.top;
+					left = posTarget.left - posEl.left;
+					bottom = posTarget.bottom - posEl.bottom;
+					right = posTarget.right - posEl.right;
+				 }
 
-				for(var j in conds) {
-					var name = Object.keys(conds[j])[0],
-						value = conds[j][name];
+				for(var c in conditions) {
+					var conds = conditions[c];
+					newValue = true;
 
-					/*console.log(
-						"top", top,
-						"left", left,
-						"bottom:", bottom,
-						"right:", right
-					);*/
+					for(var j in conds) {
+						var name = Object.keys(conds[j])[0],
+							value = conds[j][name];
 
-					if( (name === "top" && top < value) ||
-						(name === "left" && left < value ) ||
-						(name === "bottom" && bottom > value ) ||
-						(name === "right" && right > value )
-					) {
-						newValue = false;
+						if( (name === "top" && top < value) ||
+							(name === "middle" && (top - value > wHalfHeight || bottom + value < -wHalfHeight) ) ||
+							(name === "bottom" && bottom > value ) ||
+							(name === "left" && left < value ) ||
+							(name === "center" && (left - value > wHalfWidth || right + value < -wHalfWidth) ) ||
+							(name === "right" && right > value )
+						) {
+							newValue = false;
+							break;
+						}
+					}
+
+					if(newValue === true) {
 						break;
 					}
 				}
 
-				if(newValue === true) {
-					break;
+				if( (target.getAttribute("data-rollon-state") === "true") !== newValue) {
+					target.setAttribute("data-rollon-state", newValue);
+					conditionsItem.cb(newValue, target);
 				}
-			}
-
-			if(conditionsItem.value !== newValue) {
-				conditionsItem.value = newValue;
-				conditionsItem.cb(newValue, conditionsItem.on);
 			}
 		}
 
-		self.scrollChanged = false;
+		self.updated = false;
 	}
 };
 
-exports("engine", {
+exports("rolling/engine", {
 	rollon: function(el, options) {
 		var id = el.getAttribute("data-rollon");
-		if(id !== null) {
+		if(id === null) {
+			return new RollFrame(el, options);
+		} else {
 			queue[id].add(options);
 			return queue[id];
-		} else {
-			return new RollFrame(el, options);
 		}
 	},
 
@@ -196,3 +241,4 @@ exports("engine", {
 		return new RollFrame(el, options);
 	}
 });
+

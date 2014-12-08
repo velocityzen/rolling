@@ -3,7 +3,7 @@
     browser:true
 */
 
-var engineRollTo = require('engine').rollto,
+var engineRollTo = require('rolling/engine').rollto,
 	isWebkit = !!navigator.userAgent.match(/webkit/i);
 
 var rollTo = function(el, options, cb) {

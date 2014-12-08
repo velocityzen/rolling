@@ -2,6 +2,8 @@
 
 Scroll everything with no dependencies
 
+**All calculations are super optimzed for smooth scrolling**
+
 ## rollTo(el, options, [cb])
 Scrolls element for your pleasure.
 __Rolling is always interrupted when user starts to scroll__
@@ -38,15 +40,14 @@ Calls callback function on scroll element conditions.
 *   **options**
     -   **on** — html element or selector or `{top: number, left: number}`
     -   **condition** conditions for html element position relative to scroll position of the el
-    -   **direction** — _vertical_, _horizontal_, _both_, default "vertical"
 *   **callback** — callback function, gets bool value about condition changes
 
 ### Conditions
 Example: `'top(20) and bottom(-20)'`
 
 #### Keywords
-*   **top position**: _top_, _bottom_
-*   **left position**: _left_, _right_
+*   **top position**: _top_, _middle_, _bottom_
+*   **left position**: _left_, _center_, _right_
 *   **logic**:  _and_, _or_
 
 ### Example

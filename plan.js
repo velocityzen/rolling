@@ -1,7 +1,7 @@
 "use strict";
 
 var options = {
-	src: "./src",
+	src: "./rolling",
 	dst: "./"
 };
 

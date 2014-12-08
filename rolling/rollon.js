@@ -3,7 +3,7 @@
     browser:true
 */
 
-var engineRollOn = require('engine').rollon,
+var engineRollOn = require('rolling/engine').rollon,
 	rxCondition = /^([a-z]+)(?:\(([-0-9]+)\))?/,
 	isWebkit = !!navigator.userAgent.match(/webkit/i);
 
@@ -12,21 +12,19 @@ var rollOn = function(el, options, cb) {
 		el = isWebkit ? document.body : document.documentElement;
 	}
 
-    var on = options.on,
-    	conditions = options.condition.split(" "),
+    var on, conditions = options.condition.split(" "),
     	parsed = {
 	    	cb: cb,
-	    	value: undefined,
 	    	c: []
 	    },
     	currentConditions;
 
-    if(typeof on === "string") {
-    	parsed.on = el.querySelector(on);
+    if(typeof options.on === "string") {
+    	parsed.selector = options.on;
     }
 
-	if(!on) {
-		parsed.on = el;
+	if(!options.on) {
+		parsed.on = [el];
 	}
 
 	for (var i in conditions) {
