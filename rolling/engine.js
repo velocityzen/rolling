@@ -1,11 +1,8 @@
-/*jshint
-    strict: false,
-    browser:true
-*/
+/*eslint-disable strict */
+var requestAnimationFrame = require("detective/raf"),
+	easing = require("rolling/easing");
 
-var requestAnimationFrame = require('detective/raf'),
-	easing = require('rolling/easing'),
-    userScrollEvent = "onwheel" in document.createElement("div") ? "wheel" : // Modern browsers support "wheel"
+var userScrollEvent = "onwheel" in document.createElement("div") ? "wheel" : // Modern browsers support "wheel"
               document.onmousewheel !== undefined ? "mousewheel" : // Webkit and IE support at least "mousewheel"
               "DOMMouseScroll", // let's assume that remaining browsers are older Firefox
 
@@ -66,7 +63,7 @@ var RollFrame = function(el, options) {
 			};
 		}
 
-		self.onScroll = function(e) {
+		self.onScroll = function() {
 			self.stop();
 			el.removeEventListener(userScrollEvent, self.onScroll);
 		};
@@ -74,7 +71,7 @@ var RollFrame = function(el, options) {
 
 		self.begin = Date.now();
 	} else if(options.c) {
-		self.onScroll = function(e) {
+		self.onScroll = function() {
 			self.updated = true;
 		};
 
@@ -101,7 +98,7 @@ RollFrame.prototype = {
 
 	start: function() {
 		this.id = queueIndex++;
-		this.el.setAttribute("data-"+this.type, this.id);
+		this.el.setAttribute("data-" + this.type, this.id);
 		queue[this.id] = this;
 		++queueLength === 1 && engine();
 	},
@@ -123,8 +120,8 @@ RollFrame.prototype = {
 	animations: function() {
 		var self = this,
 			el = this.el,
-		 	a = self.a,
-			time =  Date.now() - self.begin;
+			a = self.a,
+			time = Date.now() - self.begin;
 
 		if(time > self.duration) {
 			time = self.duration;
@@ -152,15 +149,15 @@ RollFrame.prototype = {
 		var self = this,
 			el = self.el,
 			conditionsArray = self.c,
-		 	top, left, bottom, right, middle, center,
-		 	posEl = el.getBoundingClientRect();
+			top, left, bottom, right,
+			posEl = el.getBoundingClientRect();
 
 		for (var i in conditionsArray) {
 			var conditionsItem = conditionsArray[i],
 				conditions = conditionsItem.c,
 				targets = conditionsItem.on;
 
-			for(var t = 0, l = targets.length; t<l; t++ ) {
+			for(var t = 0, l = targets.length; t < l; t++ ) {
 				var target = targets[t],
 					posTarget = target.getBoundingClientRect(),
 					newValue;
@@ -181,12 +178,12 @@ RollFrame.prototype = {
 					left = posTarget.left;
 					bottom = posTarget.bottom - wHeight;
 					right = posTarget.right - wWidth;
-				 } else {
-			 		top = posTarget.top - posEl.top;
+				} else {
+					top = posTarget.top - posEl.top;
 					left = posTarget.left - posEl.left;
 					bottom = posTarget.bottom - posEl.bottom;
 					right = posTarget.right - posEl.right;
-				 }
+				}
 
 				for(var c in conditions) {
 					var conds = conditions[c];
@@ -241,4 +238,3 @@ exports("rolling/engine", {
 		return new RollFrame(el, options);
 	}
 });
-

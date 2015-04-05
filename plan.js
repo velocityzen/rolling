@@ -11,7 +11,7 @@ var js = {
 		"easing.js",
 		"engine.js",
 		"rollto.js",
-		"rollon.js",
+		"rollon.js"
 	],
 
 	"jquery.rolling.js": [
@@ -20,7 +20,7 @@ var js = {
 		"engine.js",
 		"rollto.js",
 		"rollon.js",
-		"jquery.js",
+		"jquery.js"
 	]
 };
 
@@ -32,6 +32,6 @@ module.exports = {
 	},
 
 	"belt:js": {
-		tools: ["concat", "common-js", "uglify"]
+		tools: ["src-files", "common-js", "uglify", "dst-file"]
 	}
 };

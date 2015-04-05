@@ -1,26 +1,22 @@
-/*jshint
-    strict: false,
-    browser:true
-*/
-
-var engineRollTo = require('rolling/engine').rollto,
-	isWebkit = !!navigator.userAgent.match(/webkit/i);
+/*eslint-disable strict */
+var engineRollTo = require("rolling/engine").rollto;
+var isWebkit = !!navigator.userAgent.match(/webkit/i);
 
 var rollTo = function(el, options, cb) {
 	if(el === window || el === document.body || el === document.documentElement) {
 		el = isWebkit ? document.body : document.documentElement;
 	}
 
-    var target = {},
-    	to = options.to,
-    	direction = options.direction || "vertical";
+	var target = {},
+		to = options.to,
+		direction = options.direction || "vertical";
 
-    if(typeof to === "string") {
-    	to = el.querySelector(to);
+	if(typeof to === "string") {
+		to = el.querySelector(to);
 		if(!to) {
 			return false;
 		}
-    }
+	}
 
 	if(to instanceof Element) {
 		var pos = to.getBoundingClientRect();
@@ -33,14 +29,14 @@ var rollTo = function(el, options, cb) {
 		to.left -= el.scrollLeft;
 	}
 
-	if(direction === "vertical" || direction ==="both") {
+	if(direction === "vertical" || direction === "both") {
 		var topChange = to.top + (options.shiftTop || 0);
 		if(topChange !== 0) {
 			target.scrollTop = topChange;
 		}
 	}
 
-	if(direction === "horizontal" || direction ==="both") {
+	if(direction === "horizontal" || direction === "both") {
 		var leftChange = to.left + (options.shiftLeft || 0);
 		if(leftChange !== 0) {
 			target.scrollLeft = leftChange;

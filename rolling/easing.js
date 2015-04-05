@@ -1,6 +1,4 @@
-/*jshint
-    strict: false
-*/
+/*eslint-disable strict */
 
 exports("rolling/easing", {
 	linear: function (t, b, c, d) {

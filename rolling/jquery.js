@@ -1,11 +1,7 @@
-/*jshint
-    strict: false,
-    browser:true,
-    jquery: true
-*/
-
-var rollTo = require('rolling/rollto'),
-	rollOn = require('rolling/rollon');
+/*eslint-disable strict */
+/*global jQuery */
+var rollTo = require("rolling/rollto"),
+	rollOn = require("rolling/rollon");
 
 jQuery.fn.extend({
 	rollTo: function(el, options, cb) {
