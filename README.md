@@ -38,7 +38,7 @@ Calls the callback function if the conditions result is changed.
 
 *   **el** — element to scroll
 *   **options**
-    -   **on** — html element or selector or `{top: number, left: number}`
+    -   **on** — html element or selector`
     -   **condition** conditions for an html element position relative to the scroll position of the el
 *   **callback** — callback function, gets boolean value on condition changes and an html element that triggered the change
 
