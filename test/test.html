@@ -1,72 +1,80 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Roll test</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="../rolling.js"></script>
+	<title>Roll test</title>
+	<link rel="stylesheet" href="style.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="../jquery.rolling.js"></script>
 </head>
 <body>
 <script>
-/*jshint
-    strict: false,
-    browser:true,
-    jquery: true
-*/
+ "use strict";
 $(function(){
-    $('header a').on('click', function(e){
-        e.preventDefault();
-        rollTo(window, {
-            to: this.hash,
-            ease: "inOutExpo",
-            duration: 1500
-        });
-    });
+	var $w = $(window);
 
-    var scroll = document.getElementById("scroll");
-    $('a.child').on('click', function(e){
-        e.preventDefault();
-        rollTo(scroll, {
-                to: {top: 200, left: 50},
-                direction: "both",
-                shiftTop: 50,
-                ease: "inOutExpo"
-            },
-            function() {console.log('done');}
-        );
-    });
+	$("header a").on("click", function(e){
+		e.preventDefault();
+		$w.rollTo({
+			to: this.hash,
+			ease: "inOutExpo",
+			duration: 1500
+		});
+	});
 
-    rollOn(window, {
-            on: "#content",
-            condition: "top(10) and bottom(-10)"
-        },
-        function(condition, el) {
-            el.style.background = condition ? "#00ff00" : "#ff0000";
-        }
-    );
+	var $scroll = $("#scroll");
+	$("a.child").on("click", function(e){
+		e.preventDefault();
+		$scroll.rollTo({
+				to: {top: 200, left: 50},
+				direction: "both",
+				shiftTop: 50,
+				ease: "inOutExpo"
+			},
+			function() {console.log("done");}
+		);
+	});
 
+	$w.rollOn({
+			on: "#content",
+			condition: "top(20) and bottom(-20)"
+		},
+		function(condition, el) {
+			console.log("window", condition);
+			el.style.background = condition ? "#006600" : "#660000";
+		}
+	);
+
+	$scroll.rollOn({
+			on: "#rollon",
+			condition: "middle"
+		},
+		function(condition, el) {
+			console.log("box", condition);
+			el.style.background = condition ? "#006600" : "#660000";
+		}
+	);
 
 });
 </script>
 
 <header>
-    <ul>
-        <li><a href="#header">Header</a></li>
-        <li><a href="#content">Content</a></li>
-        <li><a href="#footer">Footer</a></li>
-    </ul>
+	<ul>
+		<li><a href="#header">Header</a></li>
+		<li><a href="#content">Content</a></li>
+		<li><a href="#footer">Footer</a></li>
+	</ul>
 </header>
 
 <div id="header"><p>header</p></div>
 <div id="content">
-    <p>content</p>
-    <p><a href="#child" class="child">Child</a></p>
-    <div id="scroll">
-    <p>1<br>2<br>3<br>4<br>5<br>6<span id="rollon">7</span>8<br>9<br>10<br>11<br>12<br>13<br>14</p>
-    </div>
+	<p>content</p>
+	<p><a href="#child" class="child">Child</a></p>
+	<div id="scroll">
+	<p>1<br>2<br>3<br>4<br>5<br>6<span id="rollon">7</span>8<br>9<br>10<br>11<br>12<br>13<br>14</p>
+	</div>
 </div>
 <footer id="footer">
-    <p>footer</p>
+	<p>footer</p>
 </footer>
 
 </body>

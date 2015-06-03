@@ -1,6 +1,6 @@
 /*eslint-disable strict */
 var engineRollOn = require("rolling/engine").rollon;
-var rxCondition = /^([a-z]+)(?:\(([-0-9]+)\))?/,
+var rxCondition = /^([a-z]+)(?:\(([-0-9]+|([a-z]+)(?:\(([-0-9]+|)\))?)\))?/,
 	isWebkit = !!navigator.userAgent.match(/webkit/i);
 
 var rollOn = function(el, options, cb) {
@@ -17,31 +17,35 @@ var rollOn = function(el, options, cb) {
 
 	if(typeof options.on === "string") {
 		parsed.selector = options.on;
-	}
-
-	if(typeof options.on === "string") {
-		parsed.selector = options.on;
+	} else if(options.on instanceof HTMLElement) {
+		parsed.on = [options.on];
 	} else if(!options.on) {
 		parsed.on = [el];
-	} else {
-		parsed.on = options.on[0] ? options.on : [options.on];
 	}
 
 	for (var i in conditions) {
-		var parsedCondition = conditions[i].match(rxCondition),
+		var match = conditions[i].match(rxCondition),
 			condition = {};
 
-		if(i == 0 || parsedCondition[1] === "or") {
+		if(!match) { throw new Error("Can't parse conditions"); }
+
+		if(i == 0 || match[1] === "or") {
 			currentConditions = [];
 			parsed.c.push(currentConditions);
 		}
 
-		if(parsedCondition[1] === "and" || parsedCondition[1] === "or") {continue;}
-		condition[parsedCondition[1]] = ~~parsedCondition[2];
+		if(match[1] === "and" || match[1] === "or") { continue; }
+
+		if(!match[3]) {
+			match[3] = match[1];
+			match[4] = match[2];
+		}
+
+		condition[match[1]] = [match[3], ~~match[4]];
 		currentConditions.push(condition);
 	}
 
 	return engineRollOn(el, parsed, cb);
 };
 
-exports("rollOn", rollOn, true);
+exports("rolling/on", rollOn);

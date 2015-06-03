@@ -46,9 +46,16 @@ Calls the callback function if the conditions result is changed.
 Example: `'top(20) and bottom(-20)'`
 
 #### Keywords
-*   **top position**: _top_, _middle_, _bottom_
-*   **left position**: _left_, _center_, _right_
+*   **vertical**: _top_, _middle_, _bottom_
+*   **horizontal**: _left_, _center_, _right_
 *   **logic**:  _and_, _or_
+
+Keywords can be included in each other within same direction, outside keyword means `el` position to compare and inside keyword target position to compare. This way:
+
+* `"top(bottom(20))"` — full condition, means top position of the `el` should be compare to bottom position of target, and difference should be less than `20`
+* `"top"` — basicaly, this is shortcut for `"top(top(0))"`
+* `"top(20)"` — `"top(top(20))"`
+* `"top(bottom)"` — `"top(bottom(0))"`
 
 ### Example
 ```js

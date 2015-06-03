@@ -53,4 +53,4 @@ var rollTo = function(el, options, cb) {
 	}
 };
 
-exports("rollTo", rollTo, true);
+exports("rolling/to", rollTo);

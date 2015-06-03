@@ -11,7 +11,8 @@ var js = {
 		"easing.js",
 		"engine.js",
 		"rollto.js",
-		"rollon.js"
+		"rollon.js",
+		"../lib/browser.js"
 	],
 
 	"jquery.rolling.js": [
@@ -20,7 +21,7 @@ var js = {
 		"engine.js",
 		"rollto.js",
 		"rollon.js",
-		"jquery.js"
+		"../lib/jquery.js"
 	]
 };
 
@@ -28,7 +29,7 @@ module.exports = {
 	options: options,
 
 	"default": {
-		js: js,
+		js: js
 	},
 
 	"belt:js": {
