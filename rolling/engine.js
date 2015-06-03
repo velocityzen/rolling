@@ -187,7 +187,6 @@ RollFrame.prototype = {
 							value = conds[j][elProp][1];
 
 						var current = self.getCurrent(elProp + targetProp, isSelf, posEl, posTarget);
-						console.log(elProp, targetProp, value, current);
 						if((elProp === "top" || elProp === "left") ? (current < value) : (current > value)) {
 							newValue = false;
 							break;
