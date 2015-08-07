@@ -12,6 +12,7 @@ var js = {
 		"engine.js",
 		"rollto.js",
 		"rollon.js",
+		"rolldirections.js",
 		"../lib/browser.js"
 	],
 
@@ -21,6 +22,7 @@ var js = {
 		"engine.js",
 		"rollto.js",
 		"rollon.js",
+		"rolldirections.js",
 		"../lib/jquery.js"
 	]
 };

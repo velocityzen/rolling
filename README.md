@@ -4,6 +4,27 @@ Scroll everything with no dependencies
 
 **All calculations are super optimized for smooth scrolling**
 
+## rollDirections(el, [options], cb)
+Calls `cb` when `el` scrolling changed direction
+
+*   **el** — element to scroll
+*   **options**
+    -   **direction** — 'vertical || horizontal', default "vertical"
+    -   **threshold** — scroll change should be bigger that threshold, defaul 0
+*   **callback** — callback function, optional
+
+### Example
+```js
+rollDirections(window, {
+        direction: "vertical",
+        threshold: 5
+    },
+    function(dir) {
+        console.log(dir); //prints true for down and false for up
+    }
+);
+```
+
 ## rollTo(el, options, [cb])
 Scrolls element for your pleasure.
 __Rolling is always interrupted when a user starts to scroll__
@@ -39,7 +60,7 @@ Calls the callback function if the conditions result is changed.
 *   **el** — element to scroll
 *   **options**
     -   **on** — html element or selector`
-    -   **condition** conditions for an html element position relative to the scroll position of the el
+    -   **condition** conditions for an html element position relative to the scroll position of the `el`
 *   **callback** — callback function, gets boolean value on condition changes and an html element that triggered the change
 
 ### Conditions

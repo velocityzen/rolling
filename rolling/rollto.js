@@ -1,5 +1,5 @@
 /*eslint-disable strict */
-var engineRollTo = require("rolling/engine").rollto;
+var engine = require("rolling/engine").to;
 var isWebkit = !!navigator.userAgent.match(/webkit/i);
 
 var rollTo = function(el, options, cb) {
@@ -44,7 +44,7 @@ var rollTo = function(el, options, cb) {
 	}
 
 	if(Object.keys(target).length) {
-		return engineRollTo(el, {
+		return engine(el, {
 			a: target,
 			duration: options.duration || 1000,
 			ease: options.ease || "linear",

@@ -35,101 +35,20 @@ var engine = function() {
 	if(windowResized) {
 		wHeight = Math.max(documentElement.clientHeight, window.innerHeight || 0);
 		wWidth = Math.max(documentElement.clientWidth, window.innerWidth || 0);
-		windowResized = false;
 	}
 
 	for (var i in queue) {
 		var frame = queue[i];
-		frame.a && frame.animations();
-		frame.c && frame.toUpdate && frame.conditions();
+		(frame.toUpdate || windowResized) && frame.action();
 	}
 
+	windowResized = false;
 	queueLength && rAF(engine);
 };
 
-//animation frame class
-var RollFrame = function(el, options) {
-	var self = this;
-	self.el = el;
-	self.isWindow = (el === document.body || el === documentElement);
-
-	if(options.a) {
-		self.type = "rollto";
-		self.duration = options.duration;
-		self.ease = easing[options.ease];
-		self.cb = options.cb;
-		self.a = {}; //animation properties
-
-		for (var prop in options.a) {
-			self.a[prop] = {
-				b: el[prop], 	// beging value
-				c: options.a[prop]	// change value
-			};
-		}
-
-		self.onScroll = function() {
-			self.stop();
-			off(el, userScrollEvent, self.onScroll);
-		};
-		on(el, userScrollEvent, self.onScroll);
-
-		self.begin = Date.now();
-	} else if(options.c) {
-		self.onScroll = function() {
-			self.toUpdate = true;
-		};
-
-		if(self.isWindow) {
-			on(window, "scroll", self.onScroll);
-		} else {
-			on(el, "scroll", self.onScroll);
-		}
-
-		on(window, "resize", self.onScroll);
-
-		self.type = "rollon";
-		self.c = [];
-		self.add(options);
-	}
-	self.start();
-};
-
-RollFrame.prototype = {
-	add: function(conditions) {
-		this.c.push(conditions);
-		this.update();
-	},
-
-	start: function() {
-		this.id = queueIndex++;
-		this.el.setAttribute("data-" + this.type, this.id);
-		queue[this.id] = this;
-		++queueLength === 1 && engine();
-	},
-
-	stop: function() {
-		if(this.a) {
-			off(this.el, userScrollEvent, this.onScroll);
-		} else {
-			off(window, "resize", this.onScroll);
-			off(window, "scroll", this.onScroll);
-			off(this.el, "scroll", this.onScroll);
-			this.el.removeAttribute("data-rollon-state");
-		}
-
-		this.el.removeAttribute("data-" + this.type);
-		delete queue[this.id];
-		queueLength--;
-	},
-
-	done: function() {
-		var self = this;
-		setTimeout(function () {
-			self.cb(self.el);
-		}, 0);
-	},
-
-	animations: function() {
+//actions
+var actions = {
+	rollto: function() {
 		var self = this,
 			el = this.el,
 			a = self.a,
@@ -146,18 +65,7 @@ RollFrame.prototype = {
 		}
 	},
 
-	update: function() {
-		var conditions = this.c;
-		for (var i in conditions) {
-			var c = conditions[i];
-			if(c.selector) {
-				c.on = this.el.querySelectorAll(c.selector);
-			}
-		}
-		this.toUpdate = true;
-	},
-
-	conditions: function() {
+	rollon:	function() {
 		var self = this,
 			el = self.el,
 			conditionsArray = self.c,
@@ -209,6 +117,137 @@ RollFrame.prototype = {
 		self.toUpdate = false;
 	},
 
+	rolldirections: function() {
+		var self = this;
+
+		var top = self.top - self.el.scrollTop;
+		var left = self.left - self.el.scrollLeft;
+		var absTop = Math.abs(top);
+		var absLeft = Math.abs(left);
+		var conditionsArray = self.c;
+
+		for (var c in conditionsArray) {
+			var cond = conditionsArray[c];
+
+			if(cond.d === "v" && absTop > cond.t && ((self.vertical && top > 0) || (!self.vertical && top < 0)) ) {
+				self.vertical = !self.vertical;
+				cond.cb(self.vertical);
+			} else if(cond.d === "h" && absLeft > cond.t && ((self.horizontal && left > 0) || (!self.horizontal && left < 0)) ) {
+				self.horizontal = !self.horizontal;
+				cond.cb(self.horizontal);
+			}
+		}
+
+		self.top = self.el.scrollTop;
+		self.left = self.el.scrollLeft;
+		self.toUpdate = false;
+	}
+};
+
+//animation frame class
+var RollFrame = function(el, type, options) {
+	var self = this;
+	self.el = el;
+	self.isWindow = (el === document.body || el === documentElement);
+	self.type = type;
+	self.action = actions[type];
+
+	switch(type) {
+		case "rollto":
+			self.duration = options.duration;
+			self.ease = easing[options.ease];
+			self.cb = options.cb;
+			self.a = {}; //animation properties
+
+			for (var prop in options.a) {
+				self.a[prop] = {
+					b: el[prop], 	// beging value
+					c: options.a[prop]	// change value
+				};
+			}
+
+			self.onScroll = function() {
+				self.stop();
+				off(el, userScrollEvent, self.onScroll);
+			};
+			on(el, userScrollEvent, self.onScroll);
+
+			self.begin = Date.now();
+			self.toUpdate = true;
+
+			break;
+
+		case "rolldirections":
+			self.top = el.scrollTop;
+			self.left = el.scrollLeft;
+			//there is no break needed
+			//this case includes rollon init code
+
+		case "rollon":
+			self.onScroll = function() {
+				self.toUpdate = true;
+			};
+
+			if(self.isWindow) {
+				on(window, "scroll", self.onScroll);
+			} else {
+				on(el, "scroll", self.onScroll);
+			}
+
+			self.c = [];
+			self.add(options);
+			break;
+	}
+
+	self.start();
+};
+
+RollFrame.prototype = {
+	add: function(conditions) {
+		this.c.push(conditions);
+		this.update();
+	},
+
+	start: function() {
+		this.id = queueIndex++;
+		this.el.setAttribute("data-" + this.type, this.id);
+		queue[this.id] = this;
+		++queueLength === 1 && engine();
+	},
+
+	stop: function() {
+		if(this.a) {
+			off(this.el, userScrollEvent, this.onScroll);
+		} else {
+			off(window, "resize", this.onScroll);
+			off(window, "scroll", this.onScroll);
+			off(this.el, "scroll", this.onScroll);
+			this.el.removeAttribute("data-rollon-state");
+		}
+
+		this.el.removeAttribute("data-" + this.type);
+		delete queue[this.id];
+		queueLength--;
+	},
+
+	done: function() {
+		var self = this;
+		setTimeout(function () {
+			self.cb(self.el);
+		}, 0);
+	},
+
+	update: function() {
+		var conditions = this.c;
+		for (var i in conditions) {
+			var c = conditions[i];
+			if(c.selector) {
+				c.on = this.el.querySelectorAll(c.selector);
+			}
+		}
+		this.toUpdate = true;
+	},
+
 	getCurrent: function(name, isSelf, posEl, posTarget) {
 		if(!this.current[name]) {
 			this.current[name] = calc[name].call(this, isSelf, posEl, posTarget);
@@ -245,20 +284,30 @@ var calc = {
 };
 
 exports("rolling/engine", {
-	rollon: function(el, options) {
+	on: function(el, options) {
 		var id = el.getAttribute("data-rollon");
 		if(id === null) {
-			return new RollFrame(el, options);
+			return new RollFrame(el, "rollon", options);
 		} else {
 			queue[id].add(options);
 			return queue[id];
 		}
 	},
 
-	rollto: function(el, options) {
+	to: function(el, options) {
 		var id = el.getAttribute("data-rollto");
 		id && queue[id].stop();
-		return new RollFrame(el, options);
+		return new RollFrame(el, "rollto", options);
+	},
+
+	directions: function(el, options) {
+		var id = el.getAttribute("data-rolldirections");
+		if(id === null) {
+			return new RollFrame(el, "rolldirections", options);
+		} else {
+			queue[id].add(options);
+			return queue[id];
+		}
 	}
 });
 

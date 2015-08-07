@@ -1,5 +1,5 @@
 /*eslint-disable strict */
-var engineRollOn = require("rolling/engine").rollon;
+var engine = require("rolling/engine").on;
 var rxCondition = /^([a-z]+)(?:\(([-0-9]+|([a-z]+)(?:\(([-0-9]+|)\))?)\))?/,
 	isWebkit = !!navigator.userAgent.match(/webkit/i);
 
@@ -45,7 +45,7 @@ var rollOn = function(el, options, cb) {
 		currentConditions.push(condition);
 	}
 
-	return engineRollOn(el, parsed, cb);
+	return engine(el, parsed, cb);
 };
 
 exports("rolling/on", rollOn);
