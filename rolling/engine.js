@@ -180,8 +180,14 @@ var RollFrame = function(el, type, options) {
 		case "rolldirections":
 			self.top = el.scrollTop;
 			self.left = el.scrollLeft;
-			//there is no break needed
-			//this case includes rollon init code
+
+			self.onScroll = function() {
+				self.toUpdate = true;
+			};
+			on(el, userScrollEvent, self.onScroll);
+			self.c = [];
+			self.add(options);
+			break;
 
 		case "rollon":
 			self.onScroll = function() {
