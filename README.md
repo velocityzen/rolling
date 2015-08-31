@@ -1,6 +1,6 @@
 # Rolling
 
-Scroll everything with no dependencies
+Everything about scroll
 
 **All calculations are super optimized for smooth scrolling**
 
