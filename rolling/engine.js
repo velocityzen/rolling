@@ -125,16 +125,23 @@ var actions = {
 		var absTop = Math.abs(top);
 		var absLeft = Math.abs(left);
 		var conditionsArray = self.c;
+		var dir;
 
 		for (var c in conditionsArray) {
 			var cond = conditionsArray[c];
 
-			if(cond.d === "v" && absTop > cond.t && ((self.vertical && top > 0) || (!self.vertical && top < 0)) ) {
-				self.vertical = !self.vertical;
-				cond.cb(self.vertical);
-			} else if(cond.d === "h" && absLeft > cond.t && ((self.horizontal && left > 0) || (!self.horizontal && left < 0)) ) {
-				self.horizontal = !self.horizontal;
-				cond.cb(self.horizontal);
+			if(cond.d === "v" && absTop > cond.t) {
+				dir = top < 0;
+				if(self.vertical !== dir) {
+					self.vertical = dir;
+					cond.cb(self.vertical);
+				}
+			} else if(cond.d === "h" && absLeft > cond.t) {
+				dir = left < 0;
+				if(self.horizontal !== dir) {
+					self.horizontal = dir;
+					cond.cb(self.horizontal);
+				}
 			}
 		}
 
