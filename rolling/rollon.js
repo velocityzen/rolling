@@ -1,51 +1,55 @@
 /*eslint-disable strict */
-var engine = require("rolling/engine").on;
-var rxCondition = /^([a-z]+)(?:\(([-0-9]+|([a-z]+)(?:\(([-0-9]+|)\))?)\))?/,
-	isWebkit = !!navigator.userAgent.match(/webkit/i);
+var engine = require('rolling/engine').on;
+var rxCondition = /^([a-z]+)(?:\(([-0-9]+|([a-z]+)(?:\(([-0-9]+|)\))?)\))?/;
+var isWebkit = !!navigator.userAgent.match(/webkit/i);
 
 var rollOn = function(el, options, cb) {
-	if(el === window || el === document.body || el === document.documentElement) {
-		el = isWebkit ? document.body : document.documentElement;
-	}
+  if (el === window || el === document.body || el === document.documentElement) {
+    el = isWebkit ? document.body : document.documentElement;
+  }
 
-	var conditions = options.condition.split(" "),
-		parsed = {
-			cb: cb,
-			c: []
-		},
-		currentConditions;
+  var conditions = options.condition.split(' ');
+  var currentConditions;
+  var parsed = {
+    cb: cb,
+    c: []
+  };
 
-	if(typeof options.on === "string") {
-		parsed.selector = options.on;
-	} else if(options.on instanceof HTMLElement) {
-		parsed.on = [options.on];
-	} else if(!options.on) {
-		parsed.on = [el];
-	}
+  if (typeof options.on === 'string') {
+    parsed.selector = options.on;
+  } else if (options.on instanceof HTMLElement) {
+    parsed.on = [ options.on ];
+  } else if (!options.on) {
+    parsed.on = [ el ];
+  }
 
-	for (var i in conditions) {
-		var match = conditions[i].match(rxCondition),
-			condition = {};
+  for (var i in conditions) {
+    var match = conditions[i].match(rxCondition);
+    var condition = {};
 
-		if(!match) { throw new Error("Can't parse conditions"); }
+    if (!match) {
+      throw new Error('Can\'t parse conditions');
+    }
 
-		if(i == 0 || match[1] === "or") {
-			currentConditions = [];
-			parsed.c.push(currentConditions);
-		}
+    if (i == 0 || match[1] === 'or') {
+      currentConditions = [];
+      parsed.c.push(currentConditions);
+    }
 
-		if(match[1] === "and" || match[1] === "or") { continue; }
+    if (match[1] === 'and' || match[1] === 'or') {
+      continue;
+    }
 
-		if(!match[3]) {
-			match[3] = match[1];
-			match[4] = match[2];
-		}
+    if (!match[3]) {
+      match[3] = match[1];
+      match[4] = match[2];
+    }
 
-		condition[match[1]] = [match[3], ~~match[4]];
-		currentConditions.push(condition);
-	}
+    condition[match[1]] = [ match[3], ~~match[4] ];
+    currentConditions.push(condition);
+  }
 
-	return engine(el, parsed, cb);
+  return engine(el, parsed, cb);
 };
 
-exports("rolling/on", rollOn);
+exports('rolling/on', rollOn);

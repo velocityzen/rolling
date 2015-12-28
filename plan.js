@@ -1,40 +1,40 @@
-"use strict";
+'use strict';
 
 var options = {
-	src: "./rolling",
-	dst: "./"
+  src: './',
+  dst: './'
 };
 
 var js = {
-	"rolling.js": [
-		"raf.js",
-		"easing.js",
-		"engine.js",
-		"rollto.js",
-		"rollon.js",
-		"rolldirections.js",
-		"../lib/browser.js"
-	],
+  'rolling.js': [
+    'util/detective.js',
+    'rolling/easing.js',
+    'rolling/engine.js',
+    'rolling/rollto.js',
+    'rolling/rollon.js',
+    'rolling/rolldirections.js',
+    'lib/browser.js'
+  ],
 
-	"jquery.rolling.js": [
-		"raf.js",
-		"easing.js",
-		"engine.js",
-		"rollto.js",
-		"rollon.js",
-		"rolldirections.js",
-		"../lib/jquery.js"
-	]
+  'jquery.rolling.js': [
+    'util/detective.js',
+    'rolling/easing.js',
+    'rolling/engine.js',
+    'rolling/rollto.js',
+    'rolling/rollon.js',
+    'rolling/rolldirections.js',
+    'lib/jquery.js'
+  ]
 };
 
 module.exports = {
-	options: options,
+  options: options,
 
-	"default": {
-		js: js
-	},
+  'default': {
+    js: js
+  },
 
-	"belt:js": {
-		tools: ["src-files", "common-js", "uglify", "dst-file"]
-	}
+  'belt:js': {
+    tools: [ 'src-files', 'common-js', 'uglify', 'dst-file' ]
+  }
 };
