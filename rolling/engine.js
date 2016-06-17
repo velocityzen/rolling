@@ -1,7 +1,7 @@
 /*eslint-disable strict */
 var rAF = require('util/detective').requestAnimationFrame;
+var isTouch = require('util/detective').isTouch;
 var easing = require('rolling/easing');
-
 var userScrollEvent = 'onwheel' in document.createElement('div') ? 'wheel' : // Modern browsers support 'wheel'
   document.onmousewheel !== undefined ? 'mousewheel' : // Webkit and IE support at least 'mousewheel'
   'DOMMouseScroll'; // let's assume that remaining browsers are older Firefox
@@ -120,7 +120,6 @@ var calcs = {
   rolldirections: function() {
     var self = this;
 
-    console.log(self.el.scrollTop, self.el.scrollLeft);
     var top = self.top - self.el.scrollTop;
     var left = self.left - self.el.scrollLeft;
     var absTop = Math.abs(top);
@@ -193,6 +192,7 @@ var RollFrame = function(el, type, options) {
         self.toUpdate = true;
       };
       on(el, userScrollEvent, self.onScroll);
+      isTouch && on(el, 'touchmove', self.onScroll);
       self.c = [];
       self.add(options);
       break;
@@ -235,6 +235,7 @@ RollFrame.prototype = {
     } else {
       off(window, 'resize', this.onScroll);
       off(window, 'scroll', this.onScroll);
+      off(window, 'touchmove', this.onScroll);
       off(this.el, 'scroll', this.onScroll);
       this.el.removeAttribute('data-rollon-state');
     }
