@@ -57,7 +57,6 @@ var calcs = {
     if (time > self.duration) {
       time = self.duration;
       self.stop();
-      self.cb && self.done();
     }
 
     for (var prop in a) {
@@ -78,9 +77,12 @@ var calcs = {
 
       for (var t = 0, l = targets.length; t < l; t++ ) {
         var target = targets[t];
+        var result = { target: target };
         var posTarget = target.getBoundingClientRect();
         var isSelf = (el === target);
         var newValue;
+        var elProp;
+        var targetProp;
 
         //cleanup cache
         self.current = {};
@@ -90,8 +92,8 @@ var calcs = {
           newValue = true;
 
           for (var j in conds) {
-            var elProp = Object.keys(conds[j])[0];
-            var targetProp = conds[j][elProp][0];
+            elProp = Object.keys(conds[j])[0];
+            targetProp = conds[j][elProp][0];
             var value = conds[j][elProp][1];
 
             var current = self.getPos(elProp + targetProp, isSelf, posEl, posTarget);
@@ -109,7 +111,8 @@ var calcs = {
         var currentState = target.getAttribute('data-rollon-state-' + i);
         if (!currentState || (currentState === 'true') !== newValue) {
           target.setAttribute('data-rollon-state-' + i, newValue);
-          conditionsItem.cb(newValue, target);
+          result[elProp] = targetProp;
+          conditionsItem.cb(newValue, result);
         }
       }
     }
@@ -181,7 +184,6 @@ var RollFrame = function(el, type, options) {
 
       self.begin = Date.now();
       self.toUpdate = true;
-
       break;
 
     case 'rolldirections':
@@ -243,6 +245,7 @@ RollFrame.prototype = {
     this.el.removeAttribute('data-' + this.type);
     delete queue[this.id];
     queueLength--;
+    this.cb && this.done();
   },
 
   done: function() {
