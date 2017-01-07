@@ -8,7 +8,7 @@ var userScrollEvent = 'onwheel' in document.createElement('div') ? 'wheel' : // 
 
 var queueIndex = 0;
 var queueLength = 0;
-var queue = [];
+var queue = {};
 var documentElement = document.documentElement;
 
 //listeners sugar
@@ -171,7 +171,7 @@ var RollFrame = function(el, type, options) {
 
       for (var prop in options.a) {
         self.a[prop] = {
-          b: el[prop],  // beging value
+          b: el[prop],  // begin value
           c: options.a[prop]  // change value
         };
       }
@@ -243,9 +243,12 @@ RollFrame.prototype = {
     }
 
     this.el.removeAttribute('data-' + this.type);
-    delete queue[this.id];
-    queueLength--;
-    this.cb && this.done();
+
+    if (queue[this.id]) {
+      delete queue[this.id];
+      queueLength--;
+      this.cb && this.done();
+    }
   },
 
   done: function() {
@@ -328,4 +331,3 @@ exports('rolling/engine', {
     }
   }
 });
-
